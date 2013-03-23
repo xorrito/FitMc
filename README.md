@@ -4,6 +4,11 @@ FitMc
 using
 Technic-Launcher
 
+Be Advices!!!
+----
+I've writen this in Ubuntu and I am using tools already available to me in this environment. so some things might not work in other distros.
+Also if you happen to have a window manager other than compiz just use the "log on" part of it. with it logs you off when the thin window manager closes.
+
 NEWS
 ----
 
