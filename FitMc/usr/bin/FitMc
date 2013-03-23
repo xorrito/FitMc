@@ -1,0 +1,243 @@
+#!/bin/bash
+
+####============================Fuctions===========================####
+#Check if Technic-Launcher is in the correct spot, if not then download
+function installtl(){
+	if [ ! -d "$HOME/Games" ]
+		then
+			mkdir "$HOME/Games"
+	fi
+	if [ ! -d "$HOME/Games/FitMc" ]
+		then 
+			notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Downloading Technic-Launcher' &
+			mkdir "$HOME/Games/FitMc"
+	fi
+
+	cd $HOME/Games/FitMc
+	if [ ! -f "tl.jar" ]; then
+                wget --progress=bar:force --no-cache "http://mirror.technicpack.net/launcher/213/TechnicLauncher.jar" -O tl.jar 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Technic-Launcher..." 
+		chmod +x tl.jar
+	zenity --timeout=4 --info --text "In order for FitMc to work:
+Please click 'no' on the next window"
+	fi
+}
+
+#Download Lwjgl
+function dllwjgl(){
+	if [ ! -f "lwjgl-2.8.5/dlcheck" ] ; then
+		wget --progress=bar:force --no-cache "http://downloads.sourceforge.net/project/java-game-lib/Official%20Releases/LWJGL%202.8.5/lwjgl-2.8.5.zip?r=&ts=1362544277&use_mirror=hivelocity" -O lwjgl.zip 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Lwjgl 2.8.5"
+		unzip lwjgl.zip	
+		rm lwjgl.zip
+		cd lwjgl-2.8.5
+		rm -rv doc
+		rm -rv res
+		echo -e "This file is to check if I have already downloaded lwjgl" >> dlcheck
+		cd jar
+		rm AppleJavaExtensions.jar asm-debug-all.jar lwjgl-debug.jar lwjgl_test.jar lwjgl_util_applet.jar lzma.jar
+		cd ../native
+		rm -rv macosx solaris windows
+		cd ../../
+fi	
+}
+
+#Install lwjgl
+function lwjgl(){
+	cd lwjgl-2.8.5/
+		killjava
+		cp -rv jar/* $(find $HOME/.technic/ -name bin -type d)
+		cp -rv native/linux/* $(find $HOME/.technic/ -name natives -type d)
+		tl
+	cd ../
+}
+
+# Start basic window manager and video settings
+# Thank you Steam-login for this part
+function swm(){
+	notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Swiching Window Manager' &
+	xfwm4 --replace --daemon --compositor=off
+	which nvidia-settings && nvidia-settings -l 
+	which gnome-settings-daemon && gnome-settings-daemon &
+}
+
+# Check if Window Manager is running
+function cwm(){
+	if [ "$(pidof xfwm4)" ]
+	then
+		killall nautilus
+		killall compiz
+		killall openbox
+		killall metacity
+		killall unity-panel-service
+		killall unity-applications-daemon
+		killall unity-files-daemon
+		killall unity-gwibber-daemon
+		killall unity-music-daemon
+		killall unity-musicstore-daemon
+		killall unity-shopping-daemon
+
+		killall -9 nautilus
+		killall -9 compiz
+		killall -9 openbox
+		killall -9 metacity
+		killall -9 unity-panel-service
+		killall -9 unity-applications-daemon
+		killall -9 unity-files-daemon
+		killall -9 unity-gwibber-daemon
+		killall -9 unity-music-daemon
+		killall -9 unity-musicstore-daemon
+		killall -9 unity-shopping-daemon
+	else
+	swm
+	sleep 5s
+	cwm
+fi
+}
+
+# Change back to Compiz
+function swmb(){
+	notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Swithcning back to Compiz' &
+	compiz --replace &
+}
+
+# Check if Compiz restored
+function cwmb(){
+	if [ "$(pidof compiz)" ]
+	then
+		notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Restore Complete'
+	else
+	swmb
+	sleep 5s
+	cwmb
+fi
+}
+
+#Establishing technic as a function
+function tl(){
+        java -jar $HOME/Games/FitMc/tl.jar
+        }
+
+#Set java kill command as function
+function killjava(){
+        #nice kill
+        killall java
+        #force kill
+        killall -9 java
+	}
+
+
+####===========================Gui=================================####
+#Menus
+menu () {
+	int=`zenity --height=255 --width=200 --list --radiolist --text 'FitMc Options:' --column '' --column 'Option' FALSE "$opt1" FALSE "$opt2" FALSE "$opt3" FALSE "$opt4" FALSE "$opt5" FALSE "$opt6"`
+
+if [ "$int" == "Quit FitMc" ]
+        then
+                zenity --timeout=2 --info --text "Restoring, Will exit afterwards" &
+                killjava
+		cwmb 
+        exit
+fi
+if [ "$int" == "Log Off" ]
+        then
+                /usr/lib/indicator-session/gtk-logout-helper --logout 
+        menu
+fi
+if [ "$int" == "Turn System off" ]
+        then
+                /usr/lib/indicator-session/gtk-logout-helper --shutdown 
+        menu
+fi
+
+if [ "$int" == "TroubleShoot" ]
+        then
+	tbmenu
+	menu
+fi
+if [ "$int" == "Install a TexturePack" ]
+	then
+		zenity --timeout=2 --info --text "Sorry nothing here yet" 
+		menu
+fi
+if [ "$int" == "Install a Mod" ]
+	then
+		zenity --timeout=2 --info --text "Sorry nothing here yet" 
+		menu
+fi
+}
+
+tbmenu () {
+	int=`zenity --height=209 --width=227 --list --radiolist --text 'TroubleShooting Options:' --column '' --column 'Option' FALSE "$opta" FALSE "$optb" FALSE "$optc" FALSE "$optd"`
+
+if [ "$int" == "Re-Fetch Launcher" ]
+	then
+		killjava
+		rm ./tl.jar
+		installtl
+		tl
+		tbmenu
+fi
+if [ "$int" == "Restart Launcher" ]
+        then
+                zenity --timeout=2 --info --text "Restarting Technic (java)" &
+                killjava
+                #start Technic again
+                tl
+        menu
+fi
+if [ "$int" == "Force Game Redownload" ]
+	then
+		zenity --timeout=5 --info --text "There will be an option menu in a near release; for now only tekkit lite works; also saves will be kept" &
+		killjava
+		rm $HOME/.technic/cache/*
+		rm -r $HOME/.technic/tekkitlite/bin/
+		rm -r $HOME/.technic/tekkitlite/lib/
+		rm -r $HOME/.technic/tekkitlite/coremods/
+		rm -r $HOME/.technic/tekkitlite/lib/
+		rm -r $HOME/.technic/tekkitlite/mods/
+		rm -r $HOME/.technic/tekkitlite/resources/
+		rm $HOME/.technic/tekkitlite/*.log
+		tl
+	tbmenu
+fi
+if [ "$int" == "Fix Sticky Keys" ]
+	then
+		zenity --timeout=2 --info --text "Updating LWJGL for all ModPacks" &
+		dllwjgl
+		sleep 2s
+		lwjgl
+	tbmenu
+fi
+
+}
+
+#Main menu options
+opt1="Quit FitMc"
+opt2="Log Off"
+opt3="Turn System off"
+opt4="TroubleShoot"
+opt5="Install a TexturePack"
+opt6="Install a Mod"
+#Troublshoot menu options
+opta="Re-Fetch Launcher"
+optb="Restart Launcher"
+optc="Force Game Redownload"
+optd="Fix Sticky Keys"
+
+####==========================Script===============================####
+
+installtl
+cwm
+killjava
+
+notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Starting Option menu First, feel free to move it before technic starts" & sleep 2s &&
+
+#start Technic
+tl
+menu
+menu
+menu
+zenity --timeout=4 --info --text "Menu will only open one last time
+please exit properly"
+menu
+##https://dl.dropbox.com/u/74770478/DamageIndicators%5B1.4.7%5D2.4.5.zip
+

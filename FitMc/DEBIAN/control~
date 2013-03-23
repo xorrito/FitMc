@@ -1,0 +1,11 @@
+Package: FitMc
+Version: 1.3
+Section: Games
+Priority: optional
+Architecture: all
+Depends: xfwm4,wmctrl,openjdk-7-jre,xterm
+Suggests: xserver-xorg-input-joystick
+Maintainer: Xorrito Del Bosque <xorrito@azloco.com>
+Installed-size: 116
+Homepage: https://launchpad.net/~xorrito/+archive/fitmc
+Description: Run Technic-Launcher in a thin environment.

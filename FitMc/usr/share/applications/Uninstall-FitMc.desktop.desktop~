@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Uninstall FitMc
+GenericName=Uninstall FitMc
+Version=1.0
+Terminal=false
+Type=Application
+StartupNotify=true
+Icon=FitMc-logo-Uninstaller.png
+Comment=Uninstall FitMc
+Exec=/usr/bin/FitMc-Uninstaller
+Categories=GNOME;GTK;Application;Game;
+Name[en_US]=Uninstall-FitMc.desktop
