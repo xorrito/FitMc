@@ -5,7 +5,7 @@ Priority: optional
 Architecture: all
 Depends: xfwm4,wmctrl,openjdk-7-jre,xterm
 Suggests:
-Maintainer: Xorrito Del Bosque <xorrito@azloco.com>
+Maintainer: Xorrito Del Bosque <xorrito@azloco.org>
 Installed-size: 144
-Homepage: xorrito.info
+Homepage: http://github.com/xorrito/FitMc
 Description: Run Technic-Launcher in a thin environment.
