@@ -1,0 +1,15 @@
+Source: fitmc
+Section: games
+Priority: extra
+Maintainer: Xorrito Del Bosque <xorrito@azloco.org>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.2
+Homepage: http://github.com/xorrito/FitMc
+Vcs-Git: git://github.com/xorrito/FitMc.git
+
+Package: fitmc
+Architecture: all
+Depends: ${misc:Depends}, xfwm4, wmctrl, openjdk-7-jre, xterm
+Recommends: compiz
+Description: FitMc
+ Run Technic-Launcher in a thin environment.
