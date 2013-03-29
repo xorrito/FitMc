@@ -3,22 +3,22 @@
 ####============================Fuctions===========================####
 #Check if Technic-Launcher is in the correct spot, if not then download
 function installtl(){
-	if [ ! -d "$HOME/Games" ]
+	if [ ! -d "$HOME/.technic" ]
 		then
-			mkdir "$HOME/Games"
+			mkdir "$HOME/.technic"
 	fi
-	if [ ! -d "$HOME/Games/FitMc" ]
+	if [ ! -d "$HOME/.technic/FitMc" ]
 		then 
 			notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Downloading Technic-Launcher' &
-			mkdir "$HOME/Games/FitMc"
+			mkdir "$HOME/.technic/FitMc"
 	fi
 
-	cd $HOME/Games/FitMc
+	cd $HOME/.technic/FitMc
 	if [ ! -f "tl.jar" ]; then
-                wget --progress=bar:force --no-cache "http://mirror.technicpack.net/launcher/213/TechnicLauncher.jar" -O tl.jar 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Technic-Launcher..." 
+                wget --progress=bar:force --no-cache "http://mirror.technicpack.net/launcher/221/TechnicLauncher.jar" -O tl.jar 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Technic-Launcher..." 
 		chmod +x tl.jar
 	zenity --timeout=4 --info --text "In order for FitMc to work:
-Please click 'no' on the next window"
+Please click 'no' when technic ask if you wish to change the install folder"
 	fi
 }
 
@@ -53,7 +53,7 @@ function lwjgl(){
 # Start basic window manager and video settings
 # Thank you Steam-login for this part
 function swm(){
-	notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Swiching Window Manager' &
+	notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Starting thin Window Manager' &
 	xfwm4 --replace --daemon --compositor=off
 	which nvidia-settings && nvidia-settings -l 
 	which gnome-settings-daemon && gnome-settings-daemon &
@@ -113,7 +113,7 @@ fi
 
 #Establishing technic as a function
 function tl(){
-        java -jar $HOME/Games/FitMc/tl.jar
+        java -jar $HOME/.technic/FitMc/tl.jar
         }
 
 #Set java kill command as function
@@ -125,6 +125,20 @@ function killjava(){
 	}
 
 
+function texture(){
+	txtpk=`zenity --file-selection --title="Select a TexturePack"`
+	case $? in
+		0)
+			cp -v $txtpk ./texturepacks/
+			ln -v ./texturepacks/* $(find $HOME/.technic/ -name texturepacks -type d)
+			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "TexturePack installed" ;;
+		1)
+			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "No file selected" ;;
+		-1)
+			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "An unexpected error has occurred" ;;
+esac
+	}
+
 ####===========================Gui=================================####
 #Menus
 menu () {
@@ -135,6 +149,7 @@ if [ "$int" == "Quit FitMc" ]
                 zenity --timeout=2 --info --text "Restoring, Will exit afterwards" &
                 killjava
 		cwmb 
+		rm -v $(find $HOME/.technic/ -name *.log -type f)
         exit
 fi
 if [ "$int" == "Log Off" ]
@@ -155,7 +170,7 @@ if [ "$int" == "TroubleShoot" ]
 fi
 if [ "$int" == "Install a TexturePack" ]
 	then
-		zenity --timeout=2 --info --text "Sorry nothing here yet" 
+		texture 
 		menu
 fi
 if [ "$int" == "Install a Mod" ]
@@ -188,14 +203,12 @@ if [ "$int" == "Force Game Redownload" ]
 	then
 		zenity --timeout=5 --info --text "There will be an option menu in a near release; for now only tekkit lite works; also saves will be kept" &
 		killjava
-		rm $HOME/.technic/cache/*
-		rm -r $HOME/.technic/tekkitlite/bin/
-		rm -r $HOME/.technic/tekkitlite/lib/
-		rm -r $HOME/.technic/tekkitlite/coremods/
-		rm -r $HOME/.technic/tekkitlite/lib/
-		rm -r $HOME/.technic/tekkitlite/mods/
-		rm -r $HOME/.technic/tekkitlite/resources/
-		rm $HOME/.technic/tekkitlite/*.log
+		rm -rv $(find $HOME/.technic/ -name cache -type d)
+		rm -rv $(find $HOME/.technic/ -name bin -type d)
+		rm -rv $(find $HOME/.technic/ -name lib -type d)
+		rm -rv $(find $HOME/.technic/ -name coremods -type d)
+		rm -rv $(find $HOME/.technic/ -name mods -type d)
+		rm -rv $(find $HOME/.technic/ -name resources -type d)
 		tl
 	tbmenu
 fi
@@ -229,15 +242,15 @@ installtl
 cwm
 killjava
 
-notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Starting Option menu First, feel free to move it before technic starts" & sleep 2s &&
+notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Starting Option menu and technic launcher"
 
 #start Technic
+menu
 tl
 menu
 menu
 menu
-zenity --timeout=4 --info --text "Menu will only open one last time
+zenity --warning --text "Menu will only open one last time
 please exit properly"
 menu
-##https://dl.dropbox.com/u/74770478/DamageIndicators%5B1.4.7%5D2.4.5.zip
-
+/usr/lib/indicator-session/gtk-logout-helper --logout 

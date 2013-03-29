@@ -15,11 +15,23 @@ NEWS
 * *Version 1* <br/>
 Start of project
 
+* *Version 2* <br/>
++finished option to install texture pack
+*changed direction where user level files reside (.technic/FitMc)
+*fixed main starting program not pointing to the right logo
+*fixed "force re-download for game files to be able to work with all modpacks
+
+Future
+-----
+*All images are place holders and will be changed to nicer ones
+*option to add individual mods will be added, it will only add per mod pack, due to compatibility.
+
 Features
 -----
 * Autofetching of Technic-Launcher
 * Switch window managers to a slim one (with redundancy just in case if it dosent start on the first try)
 * Menu with: 'quit, log off, turn off, troubleshoot, install textures(NYI), and install mods(NYI)'
+* aided texture pack installation, will only add one and link from the other modpacks to lower space used
 * Troubleshoot menu with: 'Re-Fetching of the launcher, Restart of launcher/game, Force game files to redownload, and a fix to stiky keys'
 
 Reasoning of troubelshoot items
