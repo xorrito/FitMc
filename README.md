@@ -15,8 +15,8 @@ NEWS
 * *Version 1* <br/>
 Start of project
 
-* *Version 2* <br/>
-+finished option to install texture pack
+* *Version 1.5* <br/>
+*finished option to install texture pack
 *changed direction where user level files reside (.technic/FitMc)
 *fixed main starting program not pointing to the right logo
 *fixed "force re-download for game files to be able to work with all modpacks
@@ -43,8 +43,3 @@ Reasoning of troubelshoot items
 
 -------
 Feed back is greatly apreciated!
-
-Notes to self
------
-To find the size of the folder:
-du -sx --exclude DEBIAN FitMc/

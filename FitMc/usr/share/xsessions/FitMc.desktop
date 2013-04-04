@@ -2,5 +2,5 @@
 Name=FitMc
 Comment=This session logs you directly to FitMc
 Exec=FitMc
-Icon=FitMc.png
+Icon=fitmc_badge.png
 Type=Application

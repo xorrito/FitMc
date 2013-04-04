@@ -245,7 +245,6 @@ killjava
 notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Starting Option menu and technic launcher"
 
 #start Technic
-menu
 tl
 menu
 menu
