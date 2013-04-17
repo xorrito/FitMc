@@ -36,7 +36,7 @@ function dllwjgl(){
 		rm AppleJavaExtensions.jar asm-debug-all.jar lwjgl-debug.jar lwjgl_test.jar lwjgl_util_applet.jar lzma.jar
 		cd ../native
 		rm -rv macosx solaris windows
-		cd ../../
+		cd $HOME/.technic/FitMc/
 fi	
 }
 
@@ -47,7 +47,7 @@ function lwjgl(){
 		cp -rv jar/* $(find $HOME/.technic/ -name bin -type d)
 		cp -rv native/linux/* $(find $HOME/.technic/ -name natives -type d)
 		tl
-	cd ../
+	cd $HOME/.technic/FitMc/
 }
 
 # Start basic window manager and video settings
@@ -149,7 +149,8 @@ if [ "$int" == "Quit FitMc" ]
                 zenity --timeout=2 --info --text "Restoring, Will exit afterwards" &
                 killjava
 		cwmb 
-		rm -v $(find $HOME/.technic/ -name *.log -type f)
+		rm -v $(find $HOME/.technic/FitMc/ -name *.log -type f)
+		cd $HOME/
         exit
 fi
 if [ "$int" == "Log Off" ]
@@ -239,13 +240,13 @@ optd="Fix Sticky Keys"
 ####==========================Script===============================####
 
 installtl
-cwm
 killjava
+tl
+cwm
+
 
 notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Starting Option menu and technic launcher"
 
-#start Technic
-tl
 menu
 menu
 menu

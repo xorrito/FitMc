@@ -1,9 +1,7 @@
-fitmc (1.5) unstable; urgency=low
+fitmc (1.6) quantal; urgency=low
 
-  * Finished option to install texture pack
-  * Changed direction where user level files reside (.technic/FitMc)
-  * Fixed main starting program not pointing to the right logo
-  * Fixed "force re-download for game files to be able to work with all modpacks
-  * Some renaming for standards
+  * Fixed .log cleaning
+  * Changed starting prosses in hopes to speed up loading
+  * Fixed finishing wd to avoid isues
 
- -- Xorrito Del Bosque <xorrito@azloco.org>  Fri, 29 Mar 2013 20:45:36 +0400
+ -- Xorrito Del Bosque (wag on) <xorrito@azloco.org>  Fri, 29 Mar 2013 20:45:36 +0400

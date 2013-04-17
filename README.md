@@ -13,24 +13,35 @@ NEWS
 ----
 
 * *Version 1* <br/>
-Start of project
+  * Start of project
 
 * *Version 1.5* <br/>
-*finished option to install texture pack
-*changed direction where user level files reside (.technic/FitMc)
-*fixed main starting program not pointing to the right logo
-*fixed "force re-download for game files to be able to work with all modpacks
+  * finished option to install texture pack
+  * changed direction where user level files reside (.technic/FitMc)
+  * fixed main starting program not pointing to the right logo
+  * fixed "force re-download for game files to be able to work with all modpacks
+
+* *Version 1.6* <br/>
+  * Fixed .log cleaning
+  * Changed starting prosses in hopes to speed up loading
+  * Fixed finishing wd to avoid isues
+  * Moved .deb file to ppa:xorrito/fitmc
 
 Future
 -----
-*All images are place holders and will be changed to nicer ones
-*option to add individual mods will be added, it will only add per mod pack, due to compatibility.
+  * All images are place holders and will be changed to nicer ones
+  * option to add individual mods will be added, it will only add per mod pack, due to compatibility.
+  * will change gui method to buttons instead of radio list
+  * Unity integration
+  * Option to load without Window Manager change
+  * Clock display
+  * Rearragement of all options
 
 Features
 -----
 * Autofetching of Technic-Launcher
 * Switch window managers to a slim one (with redundancy just in case if it dosent start on the first try)
-* Menu with: 'quit, log off, turn off, troubleshoot, install textures(NYI), and install mods(NYI)'
+* Menu with: 'quit, log off, turn off, troubleshoot, install textures, and install mods(NYI)'
 * aided texture pack installation, will only add one and link from the other modpacks to lower space used
 * Troubleshoot menu with: 'Re-Fetching of the launcher, Restart of launcher/game, Force game files to redownload, and a fix to stiky keys'
 
