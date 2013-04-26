@@ -1,5 +1,7 @@
 #!/bin/bash
-
+####========================Version==Controll======================####
+tlv=222
+lwjglv=2.8.5
 ####============================Fuctions===========================####
 #Check if Technic-Launcher is in the correct spot, if not then download
 function installtl(){
@@ -14,21 +16,20 @@ function installtl(){
 	fi
 
 	cd $HOME/.technic/FitMc
-	if [ ! -f "tl.jar" ]; then
-                wget --progress=bar:force --no-cache "http://mirror.technicpack.net/launcher/221/TechnicLauncher.jar" -O tl.jar 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Technic-Launcher..." 
-		chmod +x tl.jar
-	zenity --timeout=4 --info --text "In order for FitMc to work:
-Please click 'no' when technic ask if you wish to change the install folder"
+	if [ ! -f "tl-${tlv}.jar" ]; then
+		rm "tl*.jar"
+                wget --progress=bar:force --no-cache "http://mirror.technicpack.net/launcher/${tlv}/TechnicLauncher.jar" -O tl-${tlv}.jar 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Technic-Launcher..." 
+		chmod +x tl-${tlv}.jar
 	fi
 }
 
 #Download Lwjgl
 function dllwjgl(){
-	if [ ! -f "lwjgl-2.8.5/dlcheck" ] ; then
-		wget --progress=bar:force --no-cache "http://downloads.sourceforge.net/project/java-game-lib/Official%20Releases/LWJGL%202.8.5/lwjgl-2.8.5.zip?r=&ts=1362544277&use_mirror=hivelocity" -O lwjgl.zip 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Lwjgl 2.8.5"
+	if [ ! -f "lwjgl-${lwjglv}/dlcheck" ] ; then
+		wget --progress=bar:force --no-cache "http://sourceforge.net/projects/java-game-lib/files/latest/download?source=files" -O lwjgl.zip 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Lwjgl ${lwjglv}"
 		unzip lwjgl.zip	
 		rm lwjgl.zip
-		cd lwjgl-2.8.5
+		cd lwjgl-${lwjglv}
 		rm -rv doc
 		rm -rv res
 		echo -e "This file is to check if I have already downloaded lwjgl" >> dlcheck
@@ -42,7 +43,7 @@ fi
 
 #Install lwjgl
 function lwjgl(){
-	cd lwjgl-2.8.5/
+	cd lwjgl-${lwjglv}/
 		killjava
 		cp -rv jar/* $(find $HOME/.technic/ -name bin -type d)
 		cp -rv native/linux/* $(find $HOME/.technic/ -name natives -type d)
@@ -113,7 +114,7 @@ fi
 
 #Establishing technic as a function
 function tl(){
-        java -jar $HOME/.technic/FitMc/tl.jar
+        java -jar $HOME/.technic/FitMc/tl-${tlv}.jar
         }
 
 #Set java kill command as function
@@ -129,8 +130,12 @@ function texture(){
 	txtpk=`zenity --file-selection --title="Select a TexturePack"`
 	case $? in
 		0)
-			cp -v $txtpk ./texturepacks/
-			ln -v ./texturepacks/* $(find $HOME/.technic/ -name texturepacks -type d)
+			if [ ! -d "texturepacks/" ]
+				then
+				mkdir "texturepacks"
+			fi
+			mv ${txtpk} texturepacks/.
+			ln -s $(find $HOME/.technic/ -name texturepacks -type d) texturepacks/
 			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "TexturePack installed" ;;
 		1)
 			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "No file selected" ;;
@@ -142,7 +147,7 @@ esac
 ####===========================Gui=================================####
 #Menus
 menu () {
-	int=`zenity --height=255 --width=200 --list --radiolist --text 'FitMc Options:' --column '' --column 'Option' FALSE "$opt1" FALSE "$opt2" FALSE "$opt3" FALSE "$opt4" FALSE "$opt5" FALSE "$opt6"`
+	int=`zenity --height=301 --width=250 --list --radiolist --text 'FitMc Options:' --column '' --column 'Option' FALSE "$opt1" FALSE "$opt2" FALSE "$opt3" FALSE "$opt4" FALSE "$opt5" FALSE "$opt6" FALSE "$opt7" FALSE "$opt8"`
 
 if [ "$int" == "Quit FitMc" ]
         then
@@ -153,41 +158,26 @@ if [ "$int" == "Quit FitMc" ]
 		cd $HOME/
         exit
 fi
-if [ "$int" == "Log Off" ]
-        then
-                /usr/lib/indicator-session/gtk-logout-helper --logout 
-        menu
-fi
-if [ "$int" == "Turn System off" ]
+if [ "$int" == "Power System off" ]
         then
                 /usr/lib/indicator-session/gtk-logout-helper --shutdown 
         menu
 fi
-
-if [ "$int" == "TroubleShoot" ]
-        then
-	tbmenu
-	menu
-fi
 if [ "$int" == "Install a TexturePack" ]
 	then
-		texture 
+		zenity --timeout=2 --info --text "Broken" &
+		#texture 
 		menu
 fi
 if [ "$int" == "Install a Mod" ]
 	then
-		zenity --timeout=2 --info --text "Sorry nothing here yet" 
+		zenity --timeout=2 --info --text "Broken" &
 		menu
 fi
-}
-
-tbmenu () {
-	int=`zenity --height=209 --width=227 --list --radiolist --text 'TroubleShooting Options:' --column '' --column 'Option' FALSE "$opta" FALSE "$optb" FALSE "$optc" FALSE "$optd"`
-
-if [ "$int" == "Re-Fetch Launcher" ]
+if [ "$int" == "Force Launcher Redownload" ]
 	then
 		killjava
-		rm ./tl.jar
+		rm ./tl-${tlv}.jar
 		installtl
 		tl
 		tbmenu
@@ -200,7 +190,7 @@ if [ "$int" == "Restart Launcher" ]
                 tl
         menu
 fi
-if [ "$int" == "Force Game Redownload" ]
+if [ "$int" == "Force Modpack Redownload" ]
 	then
 		zenity --timeout=5 --info --text "There will be an option menu in a near release; for now only tekkit lite works; also saves will be kept" &
 		killjava
@@ -225,17 +215,14 @@ fi
 }
 
 #Main menu options
-opt1="Quit FitMc"
-opt2="Log Off"
-opt3="Turn System off"
-opt4="TroubleShoot"
-opt5="Install a TexturePack"
-opt6="Install a Mod"
-#Troublshoot menu options
-opta="Re-Fetch Launcher"
-optb="Restart Launcher"
-optc="Force Game Redownload"
-optd="Fix Sticky Keys"
+opt1="Install a TexturePack"
+opt2="Install a Mod"
+opt3="Fix Sticky Keys"
+opt4="Restart Launcher"
+opt5="Force Launcher Redownload"
+opt6="Force Modpack Redownload"
+opt7="Quit FitMc"
+opt8="Power System off"
 
 ####==========================Script===============================####
 

@@ -26,6 +26,12 @@ NEWS
   * Changed starting prosses in hopes to speed up loading
   * Fixed finishing wd to avoid isues
   * Moved .deb file to ppa:xorrito/fitmc
+* *Version 1.7* <br/>
+  * Changed Release Target to raring
+  * Removed TroubleShooting menu and Uptimised the main menu
+  * Disable Texture installing as it is broken
+  * Made version controlling easier
+  * Updating Launcher Version now possible but not the best
 
 Future
 -----
@@ -35,7 +41,6 @@ Future
   * Unity integration
   * Option to load without Window Manager change
   * Clock display
-  * Rearragement of all options
 
 Features
 -----
