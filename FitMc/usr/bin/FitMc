@@ -1,7 +1,7 @@
 #!/bin/bash
 ####========================Version==Controll======================####
-tlv=222
-lwjglv=2.8.5
+tlv=223
+lwjglv=2.9.0
 ####============================Fuctions===========================####
 #Check if Technic-Launcher is in the correct spot, if not then download
 function installtl(){
@@ -25,20 +25,20 @@ function installtl(){
 
 #Download Lwjgl
 function dllwjgl(){
-	if [ ! -f "lwjgl-${lwjglv}/dlcheck" ] ; then
-		wget --progress=bar:force --no-cache "http://sourceforge.net/projects/java-game-lib/files/latest/download?source=files" -O lwjgl.zip 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Lwjgl ${lwjglv}"
-		unzip lwjgl.zip	
-		rm lwjgl.zip
+	if [ ! -f "lwjgl-${lwjglv}/" ] ; then
+		rm rv "lwjgl*/"
+		wget --progress=bar:force --no-cache "http://sourceforge.net/projects/java-game-lib/files/latest/download?source=files" -O lwjgl-${lwjglv}.zip 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Lwjgl ${lwjglv}"
+		unzip lwjgl-${lwjglv}.zip	
+		rm lwjgl-${lwjglv}.zip
 		cd lwjgl-${lwjglv}
 		rm -rv doc
 		rm -rv res
-		echo -e "This file is to check if I have already downloaded lwjgl" >> dlcheck
 		cd jar
 		rm AppleJavaExtensions.jar asm-debug-all.jar lwjgl-debug.jar lwjgl_test.jar lwjgl_util_applet.jar lzma.jar
 		cd ../native
 		rm -rv macosx solaris windows
 		cd $HOME/.technic/FitMc/
-fi	
+	fi	
 }
 
 #Install lwjgl
@@ -107,7 +107,7 @@ function cwmb(){
 		notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Restore Complete'
 	else
 	swmb
-	sleep 5s
+	sleep 10s
 	cwmb
 fi
 }
@@ -134,8 +134,9 @@ function texture(){
 				then
 				mkdir "texturepacks"
 			fi
-			mv ${txtpk} texturepacks/.
-			ln -s $(find $HOME/.technic/ -name texturepacks -type d) texturepacks/
+			mv ${txtpk} $HOME/.technic/FitMc/texturepacks/.
+			ln -sv $HOME/.technic/FitMc/texturepacks/* 
+			
 			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "TexturePack installed" ;;
 		1)
 			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "No file selected" ;;
@@ -205,7 +206,7 @@ if [ "$int" == "Force Modpack Redownload" ]
 fi
 if [ "$int" == "Fix Sticky Keys" ]
 	then
-		zenity --timeout=2 --info --text "Updating LWJGL for all ModPacks" &
+		zenity --timeout=2 --info --text "Updating LWJGL for all available ModPacks" &
 		dllwjgl
 		sleep 2s
 		lwjgl
@@ -226,8 +227,8 @@ opt8="Power System off"
 
 ####==========================Script===============================####
 
-installtl
 killjava
+installtl
 tl
 cwm
 

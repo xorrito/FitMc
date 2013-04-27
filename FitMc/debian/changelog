@@ -1,9 +1,5 @@
-fitmc (1.7) raring; urgency=low
+fitmc (1.8) raring; urgency=low
 
-  * Changed Release Target to raring
-  * Removed TroubleShooting menu and Uptimised the main menu
-  * Disable Texture installing as it is broken
-  * Made version controlling easier
-  * Updating Launcher Version now possible but not the best
+  * Updated version numbers for lwgjl and Technic launcher.
 
  -- Xorrito Del Bosque (wag on) <xorrito@azloco.org>  Fri, 29 Mar 2013 20:45:36 +0400

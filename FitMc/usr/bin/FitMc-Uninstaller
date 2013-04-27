@@ -18,7 +18,7 @@ This will delete all saved files"
 		fi
 
 	#Remove FitMc
-	xterm -title 'Uninstall FitMc' -e "sudo rm /usr/share/xsessions/FitMc.desktop && sudo rm /usr/share/unity-greeter/FitMc.png && sudo rm /usr/share/pixmaps/FitMc-logo.png && sudo rm /usr/share/pixmaps/FitMc-logo-Uninstaller.png && sudo rm /usr/share/applications/FitMc.desktop && sudo rm /usr/share/applications/Uninstall-FitMc.desktop  && sudo rm /usr/bin/FitMc && sudo rm /usr/bin/FitMc-Uninstaller"
+	xterm -title 'Uninstall FitMc' -e "sudo apt-get remove fitmc"
 #Done
 zenity --timeout=4 --info --text "FitMc was succesfully uninstalled"
 

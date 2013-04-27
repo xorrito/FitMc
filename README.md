@@ -32,6 +32,8 @@ NEWS
   * Disable Texture installing as it is broken
   * Made version controlling easier
   * Updating Launcher Version now possible but not the best
+* *Version 1.8* <br/>
+  * Updated version numbers for lwgjl and Technic launcher.
 
 Future
 -----
