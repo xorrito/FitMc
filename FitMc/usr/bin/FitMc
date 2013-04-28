@@ -17,7 +17,7 @@ function installtl(){
 
 	cd $HOME/.technic/FitMc
 	if [ ! -f "tl-${tlv}.jar" ]; then
-		rm "tl*.jar"
+		rm "tl*"
                 wget --progress=bar:force --no-cache "http://mirror.technicpack.net/launcher/${tlv}/TechnicLauncher.jar" -O tl-${tlv}.jar 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Technic-Launcher..." 
 		chmod +x tl-${tlv}.jar
 	fi
@@ -125,7 +125,7 @@ function killjava(){
         killall -9 java
 	}
 
-
+#Texture Pack Installer
 function texture(){
 	txtpk=`zenity --file-selection --title="Select a TexturePack"`
 	case $? in
@@ -135,8 +135,8 @@ function texture(){
 				mkdir "texturepacks"
 			fi
 			mv ${txtpk} $HOME/.technic/FitMc/texturepacks/.
-			ln -sv $HOME/.technic/FitMc/texturepacks/* 
-			
+			ln -sv -t $(find $HOME/.technic/ -name texturepacks -type d)/ $HOME/.technic/FitMc/texturepacks/*
+
 			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "TexturePack installed" ;;
 		1)
 			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "No file selected" ;;
@@ -166,8 +166,7 @@ if [ "$int" == "Power System off" ]
 fi
 if [ "$int" == "Install a TexturePack" ]
 	then
-		zenity --timeout=2 --info --text "Broken" &
-		#texture 
+		texture
 		menu
 fi
 if [ "$int" == "Install a Mod" ]

@@ -1,5 +1,5 @@
-fitmc (1.8) raring; urgency=low
+fitmc (1.9) raring; urgency=low
 
-  * Updated version numbers for lwgjl and Technic launcher.
+  * Fixed Texture installer.
 
  -- Xorrito Del Bosque (wag on) <xorrito@azloco.org>  Fri, 29 Mar 2013 20:45:36 +0400

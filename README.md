@@ -34,6 +34,8 @@ NEWS
   * Updating Launcher Version now possible but not the best
 * *Version 1.8* <br/>
   * Updated version numbers for lwgjl and Technic launcher.
+* *Version 1.9* <br/>
+  * Fixed Texture Installer
 
 Future
 -----
@@ -43,6 +45,7 @@ Future
   * Unity integration
   * Option to load without Window Manager change
   * Clock display
+  * Method for uninstalling single or all textures
 
 Features
 -----
