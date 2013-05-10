@@ -45,8 +45,9 @@ function dllwjgl(){
 function lwjgl(){
 	cd lwjgl-${lwjglv}/
 		killjava
-		cp -rv jar/* $(find $HOME/.technic/ -name bin -type d)
-		cp -rv native/linux/* $(find $HOME/.technic/ -name natives -type d)
+		nativedir=find $HOME/.technic/ -name natives -type d
+		for nativedir		
+		cp -rv native/linux/* 
 		tl
 	cd $HOME/.technic/FitMc/
 }
