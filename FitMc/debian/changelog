@@ -1,5 +1,5 @@
-fitmc (1.9-1) quantal; urgency=low
+fitmc (1.9-2) quantal; urgency=low
 
-  * Temporal backport, Project will be ported to Python.
+  * Caps error fix.
 
  -- Xorrito Del Bosque (wag on) <xorrito@azloco.org>  Fri, 29 Mar 2013 20:45:36 +0400
