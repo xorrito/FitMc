@@ -8,5 +8,5 @@ Type=Application
 StartupNotify=true
 Icon=fitmc
 Comment=Uninstall FitMc
-Exec=/usr/bin/FitMc-Uninstaller
+Exec=/usr/bin/fitmc-uninstaller
 Categories=GNOME;GTK;Application;Game;

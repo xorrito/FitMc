@@ -8,5 +8,5 @@ Type=Application
 StartupNotify=true
 Icon=fitmc
 Comment=Run Technic-Launcher in a thin enviroment
-Exec=/usr/bin/FitMc
+Exec=/usr/bin/fitmc
 Categories=GNOME;GTK;Application;Game;
