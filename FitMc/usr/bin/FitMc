@@ -1,6 +1,6 @@
 #!/bin/bash
 ####========================Version==Controll======================####
-tlv=223
+tlv=236
 lwjglv=2.9.0
 ####============================Fuctions===========================####
 #Check if Technic-Launcher is in the correct spot, if not then download
@@ -43,13 +43,13 @@ function dllwjgl(){
 
 #Install lwjgl
 function lwjgl(){
-	cd lwjgl-${lwjglv}/
-		killjava
-		nativedir=find $HOME/.technic/ -name natives -type d
-		for nativedir		
-		cp -rv native/linux/* 
-		tl
-	cd $HOME/.technic/FitMc/
+#	cd lwjgl-${lwjglv}/
+#		killjava
+#		nativedir=find $HOME/.technic/ -name natives -type d
+#			
+#		cp -rv native/linux/* 
+#		tl
+#	cd $HOME/.technic/FitMc/
 }
 
 # Start basic window manager and video settings
