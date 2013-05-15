@@ -42,7 +42,7 @@ function dllwjgl(){
 }
 
 #Install lwjgl
-function lwjgl(){
+#function lwjgl(){
 #	cd lwjgl-${lwjglv}/
 #		killjava
 #		nativedir=find $HOME/.technic/ -name natives -type d
@@ -50,7 +50,7 @@ function lwjgl(){
 #		cp -rv native/linux/* 
 #		tl
 #	cd $HOME/.technic/FitMc/
-}
+#}
 
 # Start basic window manager and video settings
 # Thank you Steam-login for this part
@@ -206,10 +206,10 @@ if [ "$int" == "Force Modpack Redownload" ]
 fi
 if [ "$int" == "Fix Sticky Keys" ]
 	then
-		zenity --timeout=2 --info --text "Updating LWJGL for all available ModPacks" &
-		dllwjgl
+		zenity --timeout=2 --info --text "Sorry, Broken until I learn python or IF loop" &
+		##dllwjgl
 		sleep 2s
-		lwjgl
+		##lwjgl
 	tbmenu
 fi
 

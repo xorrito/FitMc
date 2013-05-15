@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Name=FitMc
 GenericName=FitMc
-Version=1.0
+Version=1.9-3
 Terminal=false
 Type=Application
 StartupNotify=true
