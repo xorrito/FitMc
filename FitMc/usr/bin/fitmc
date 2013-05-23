@@ -1,7 +1,7 @@
 #!/bin/bash
 ####========================Version==Controll======================####
 fitmc=2
-tlv=236
+tlv=240
 lwjglv=2.9.0
 ####============================Fuctions===========================####
 #Check if Technic-Launcher is in the correct spot, if not then download
@@ -11,7 +11,7 @@ function installtl(){
 			mkdir "$HOME/.technic"
 	fi
 	if [ ! -d "$HOME/.technic/FitMc" ]
-		then 
+		then
 			notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Downloading Technic-Launcher' &
 			mkdir "$HOME/.technic/FitMc"
 	fi
@@ -23,16 +23,16 @@ function installtl(){
 			chmod +x tl-${tlv}.jar
 		else
 			imp
-			rm -rv "*.log"
+			rm -rv *.log
 	fi
 }
 
 #Download Lwjgl
 function dllwjgl(){
 	if [ ! -d "lwjgl-${lwjglv}" ] ; then
-		rm -rv "lwjgl-${lwjglv}/"
+		rm -rv "lwjgl-${lwjglv}"
 		wget --progress=bar:force --no-cache "http://sourceforge.net/projects/java-game-lib/files/latest/download?source=files" -O lwjgl-${lwjglv}.zip 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Lwjgl ${lwjglv}"
-		unzip lwjgl-${lwjglv}.zip	
+		unzip lwjgl-${lwjglv}.zip
 		rm lwjgl-${lwjglv}.zip
 		cd lwjgl-${lwjglv}
 		rm -rv doc
@@ -43,20 +43,25 @@ function dllwjgl(){
 		rm -rv macosx solaris windows freebsd
 		cd $HOME/.technic/FitMc/
 		lwjgl
-	fi	
+	else
+		lwjgl
+	fi
 }
 
 #Install lwjgl
 function lwjgl(){
+	imp
 	cd lwjgl-${lwjglv}/
 		killjava
+	cd $HOME/.technic/FitMc/lwjgl-${lwjglv}/native/linux
+		while read dir; do
+			cp -rvs * "$dir"
+		done < $HOME/.technic/FitMc/nativesf.txt
+	cd $HOME/.technic/FitMc/lwjgl-${lwjglv}/jar
+		while read dir; do
+			cp -rvs * "$dir"
+		done < $HOME/.technic/FitMc/binf.txt
 	cd $HOME/.technic/FitMc/
-		while read dir; do
-			cp -rvs $HOME/.technic/FitMc/lwjgl-${lwjglv}/native/linux "$dir"
-		done < nativesf.txt
-		while read dir; do
-			cp -rvs $HOME/.technic/FitMc/lwjgl-${lwgjlv}/jar "$dir"
-		done < binf.txt
 		tl
 
 }
@@ -66,7 +71,7 @@ function lwjgl(){
 function swm(){
 	notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Starting thin Window Manager' &
 	xfwm4 --replace --daemon --compositor=off
-	which nvidia-settings && nvidia-settings -l 
+	which nvidia-settings && nvidia-settings -l
 	which gnome-settings-daemon && gnome-settings-daemon &
 }
 
@@ -136,14 +141,17 @@ function texture(){
 	txtpk=`zenity --file-selection --title="Select a TexturePack"`
 	case $? in
 		0)
-			if [ ! -d "texturepacks" ]
+			imp
+			if [ ! -d "txturpk" ]
 				then
-				mkdir "texturepacks"
+				mkdir "txturpk"
 			fi
-			mv ${txtpk} $HOME/.technic/FitMc/texturepacks/.
+			mv ${txtpk} $HOME/.technic/FitMc/txturpk/
+			cd $HOME/.technic/FitMc/txturpk/
 			while read dir; do
-				cp -rvs $HOME/.technic/FitMc/texturepacks/ "$dir"
-			done < texturesf.txt
+				cp -rvs $HOME/.technic/FitMc/txturpk/* "$dir"
+			done < $HOME/.technic/FitMc/texturesf.txt
+			cd $HOME/.technic/FitMc/
 
 			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "TexturePack installed" ;;
 		1)
@@ -155,19 +163,20 @@ esac
 
 #Mod Installer
 function mod(){
-	modpk=`zenity --file-selelction --title="Select Your mod file"`
+	modpk=`zenity --file-selection --title="Select Your mod file"`
 	case $? in
 		0)
+			imp
 			if [ ! -d "modfolder" ]
 				then
 				mkdir "modfolder"
 			fi
-			unset list
+			unset mdpklist
 			while read -r line; do
-				list+=("FALSE")
-				list+=("$line")
-			done < modsf.txt
-			modsel=$(zenity --title="ModPack Select" --list --radiolist --text "Select The Modpack to install the mod to" --column 'Option' "${list[@]}")
+				mdpklist+=("FALSE")
+				mdpklist+=("$line")
+			done < $HOME/.technic/FitMc/modsf.txt
+			modsel=$(zenity --title="ModPack Select" --list --radiolist --text "Select The Modpack to install the mod to" --column '' --column "Option" "${mdpklist[@]}" --separator=":")
 			mv -v ${modpk} ${modsel}
 			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Mod installed" ;;
 		1)
@@ -195,7 +204,7 @@ menu () {
 if [ "$int" == "Quit FitMc" ]
         then
                 killjava
-		cwmb 
+		cwmb
 		cd $HOME/
         exit
 fi
@@ -265,6 +274,7 @@ if [ "$int" == "$opt9" ]
 	then
 		version=`zenity --window-icon="/usr/share/pixmaps/FitMc-logo.png" --info --title "Versions" --text="\`printf "FitMc: ${fitmc} \n Technic Launcher: ${tlv} \n LWJGL: ${lwjglv}"\`"`
 		menu
+fi
 }
 
 #Main menu options
@@ -294,4 +304,6 @@ menu
 zenity --warning --text "Menu will only open one last time
 please exit properly"
 menu
-/usr/lib/indicator-session/gtk-logout-helper --logout 
+killjava
+cwmb
+cd $HOME/ 
