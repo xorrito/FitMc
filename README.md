@@ -54,6 +54,8 @@ NEWS
   * Mod installation asks for selection to avoid conflicting with other modpacks
   * Fixed Texture Installer....again but with if loop this time
   * Log cleanup moved to start up to allow troubleshooting
+* *Version 2* <br/>
+  * Should have checked before uploading.
 
 Future
 -----
