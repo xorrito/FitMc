@@ -1,5 +1,6 @@
 #!/bin/bash
 ####========================Version==Controll======================####
+fitmc=2
 tlv=236
 lwjglv=2.9.0
 ####============================Fuctions===========================####
@@ -17,16 +18,19 @@ function installtl(){
 
 	cd $HOME/.technic/FitMc
 	if [ ! -f "tl-${tlv}.jar" ]; then
-		rm "tl*"
-                wget --progress=bar:force --no-cache "http://mirror.technicpack.net/launcher/${tlv}/TechnicLauncher.jar" -O tl-${tlv}.jar 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Technic-Launcher..." 
-		chmod +x tl-${tlv}.jar
+			rm "tl-*.jar"
+                	wget --progress=bar:force --no-cache "http://mirror.technicpack.net/launcher/${tlv}/TechnicLauncher.jar" -O tl-${tlv}.jar 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Technic-Launcher..." 
+			chmod +x tl-${tlv}.jar
+		else
+			imp
+			rm -rv "*.log"
 	fi
 }
 
 #Download Lwjgl
 function dllwjgl(){
-	if [ ! -f "lwjgl-${lwjglv}/" ] ; then
-		rm rv "lwjgl*/"
+	if [ ! -d "lwjgl-${lwjglv}" ] ; then
+		rm -rv "lwjgl-${lwjglv}/"
 		wget --progress=bar:force --no-cache "http://sourceforge.net/projects/java-game-lib/files/latest/download?source=files" -O lwjgl-${lwjglv}.zip 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Lwjgl ${lwjglv}"
 		unzip lwjgl-${lwjglv}.zip	
 		rm lwjgl-${lwjglv}.zip
@@ -36,21 +40,26 @@ function dllwjgl(){
 		cd jar
 		rm AppleJavaExtensions.jar asm-debug-all.jar lwjgl-debug.jar lwjgl_test.jar lwjgl_util_applet.jar lzma.jar
 		cd ../native
-		rm -rv macosx solaris windows
+		rm -rv macosx solaris windows freebsd
 		cd $HOME/.technic/FitMc/
+		lwjgl
 	fi	
 }
 
 #Install lwjgl
-#function lwjgl(){
-#	cd lwjgl-${lwjglv}/
-#		killjava
-#		nativedir=find $HOME/.technic/ -name natives -type d
-#			
-#		cp -rv native/linux/* 
-#		tl
-#	cd $HOME/.technic/FitMc/
-#}
+function lwjgl(){
+	cd lwjgl-${lwjglv}/
+		killjava
+	cd $HOME/.technic/FitMc/
+		while read dir; do
+			cp -rvs $HOME/.technic/FitMc/lwjgl-${lwjglv}/native/linux "$dir"
+		done < nativesf.txt
+		while read dir; do
+			cp -rvs $HOME/.technic/FitMc/lwjgl-${lwgjlv}/jar "$dir"
+		done < binf.txt
+		tl
+
+}
 
 # Start basic window manager and video settings
 # Thank you Steam-login for this part
@@ -67,8 +76,6 @@ function cwm(){
 	then
 		killall nautilus
 		killall compiz
-		killall openbox
-		killall metacity
 		killall unity-panel-service
 		killall unity-applications-daemon
 		killall unity-files-daemon
@@ -79,8 +86,6 @@ function cwm(){
 
 		killall -9 nautilus
 		killall -9 compiz
-		killall -9 openbox
-		killall -9 metacity
 		killall -9 unity-panel-service
 		killall -9 unity-applications-daemon
 		killall -9 unity-files-daemon
@@ -97,7 +102,7 @@ fi
 
 # Change back to Compiz
 function swmb(){
-	notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Swithcning back to Compiz' &
+	notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Quiting' &
 	compiz --replace &
 }
 
@@ -105,7 +110,7 @@ function swmb(){
 function cwmb(){
 	if [ "$(pidof compiz)" ]
 	then
-		notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Restore Complete'
+		notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Goodbye'
 	else
 	swmb
 	sleep 10s
@@ -131,12 +136,14 @@ function texture(){
 	txtpk=`zenity --file-selection --title="Select a TexturePack"`
 	case $? in
 		0)
-			if [ ! -d "texturepacks/" ]
+			if [ ! -d "texturepacks" ]
 				then
 				mkdir "texturepacks"
 			fi
 			mv ${txtpk} $HOME/.technic/FitMc/texturepacks/.
-			ln -sv -t $(find $HOME/.technic/ -name texturepacks -type d)/ $HOME/.technic/FitMc/texturepacks/*
+			while read dir; do
+				cp -rvs $HOME/.technic/FitMc/texturepacks/ "$dir"
+			done < texturesf.txt
 
 			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "TexturePack installed" ;;
 		1)
@@ -144,19 +151,51 @@ function texture(){
 		-1)
 			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "An unexpected error has occurred" ;;
 esac
-	}
+}
+
+#Mod Installer
+function mod(){
+	modpk=`zenity --file-selelction --title="Select Your mod file"`
+	case $? in
+		0)
+			if [ ! -d "modfolder" ]
+				then
+				mkdir "modfolder"
+			fi
+			unset list
+			while read -r line; do
+				list+=("FALSE")
+				list+=("$line")
+			done < modsf.txt
+			modsel=$(zenity --title="ModPack Select" --list --radiolist --text "Select The Modpack to install the mod to" --column 'Option' "${list[@]}")
+			mv -v ${modpk} ${modsel}
+			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Mod installed" ;;
+		1)
+			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "No file selected" ;;
+		-1)
+			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "An unexpected error has occurred" ;;
+esac
+}
+
+
+function imp(){
+	rm -v binf.txt nativesf.txt texturesf.txt modsf.txt
+	find $HOME/.technic/ -name 'bin' -type d > binf.txt
+	find $HOME/.technic/ -name 'natives' -type d > nativesf.txt
+	find $HOME/.technic/ -name 'texturepacks' -type d > texturesf.txt
+	find $HOME/.technic/ -name 'mods' -type d > modsf.txt
+}
+
 
 ####===========================Gui=================================####
 #Menus
 menu () {
-	int=`zenity --height=301 --width=250 --list --radiolist --text 'FitMc Options:' --column '' --column 'Option' FALSE "$opt1" FALSE "$opt2" FALSE "$opt3" FALSE "$opt4" FALSE "$opt5" FALSE "$opt6" FALSE "$opt7" FALSE "$opt8"`
+	int=`zenity --title="FitMc" --window-icon="/usr/share/pixmaps/FitMc-logo.png" --height=326 --width=250 --list --radiolist --text 'FitMc Options:' --column '' --column 'Option' FALSE "$opt1" FALSE "$opt2" FALSE "$opt3" FALSE "$opt4" FALSE "$opt5" FALSE "$opt6" FALSE "$opt7" FALSE "$opt8" FALSE "$opt9"`
 
 if [ "$int" == "Quit FitMc" ]
         then
-                zenity --timeout=2 --info --text "Restoring, Will exit afterwards" &
                 killjava
 		cwmb 
-		rm -v $(find $HOME/.technic/FitMc/ -name *.log -type f)
 		cd $HOME/
         exit
 fi
@@ -172,20 +211,20 @@ if [ "$int" == "Install a TexturePack" ]
 fi
 if [ "$int" == "Install a Mod" ]
 	then
-		zenity --timeout=2 --info --text "Broken" &
+		mod
 		menu
 fi
 if [ "$int" == "Force Launcher Redownload" ]
 	then
 		killjava
-		rm ./tl-${tlv}.jar
+		rm tl-${tlv}.jar
 		installtl
 		tl
 		tbmenu
 fi
 if [ "$int" == "Restart Launcher" ]
         then
-                zenity --timeout=2 --info --text "Restarting Technic (java)" &
+                notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Restarting Technic Launcher" &
                 killjava
                 #start Technic again
                 tl
@@ -193,26 +232,39 @@ if [ "$int" == "Restart Launcher" ]
 fi
 if [ "$int" == "Force Modpack Redownload" ]
 	then
-		zenity --timeout=5 --info --text "There will be an option menu in a near release; for now only tekkit lite works; also saves will be kept" &
+		notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Forcing Modpack to Redownload on next launch" &
 		killjava
-		rm -rv $(find $HOME/.technic/ -name cache -type d)
-		rm -rv $(find $HOME/.technic/ -name bin -type d)
-		rm -rv $(find $HOME/.technic/ -name lib -type d)
-		rm -rv $(find $HOME/.technic/ -name coremods -type d)
-		rm -rv $(find $HOME/.technic/ -name mods -type d)
-		rm -rv $(find $HOME/.technic/ -name resources -type d)
+		find $HOME/.technic/ -name 'cache' -type d | while read dir; do
+			rm -rv "$dir"
+		done
+		find $HOME/.technic/ -name 'bin' -type d | while read dir; do
+			rm -rv "$dir"
+		done
+		find $HOME/.technic/ -name 'lib' -type d | while read dir; do
+			rm -rv "$dir"
+		done
+		find $HOME/.technic/ -name 'coremods' -type d | while read dir; do
+			rm -rv "$dir"
+		done
+		find $HOME/.technic/ -name 'mods' -type d  | while read dir; do
+			rm -rv "$dir"
+		done
+		find $HOME/.technic/ -name 'resources' -type d | while read dir; do
+			rm -rv "$dir"
+		done
 		tl
-	tbmenu
+	menu
 fi
 if [ "$int" == "Fix Sticky Keys" ]
 	then
-		zenity --timeout=2 --info --text "Sorry, Broken until I learn python or IF loop" &
-		##dllwjgl
-		sleep 2s
-		##lwjgl
-	tbmenu
+		notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Attempting to Fix Key problem" &
+		dllwjgl
+	menu
 fi
-
+if [ "$int" == "$opt9" ]
+	then
+		version=`zenity --window-icon="/usr/share/pixmaps/FitMc-logo.png" --info --title "Versions" --text="\`printf "FitMc: ${fitmc} \n Technic Launcher: ${tlv} \n LWJGL: ${lwjglv}"\`"`
+		menu
 }
 
 #Main menu options
@@ -224,6 +276,7 @@ opt5="Force Launcher Redownload"
 opt6="Force Modpack Redownload"
 opt7="Quit FitMc"
 opt8="Power System off"
+opt9="Versions"
 
 ####==========================Script===============================####
 
