@@ -1,5 +1,6 @@
-fitmc (2.1) raring; urgency=low
+fitmc (2.2) raring; urgency=low
 
-  * All features functioning.
+  * Unity integration.
+  * Option to not change Window Manager.
 
  -- Xorrito Del Bosque (wag on) <xorrito@azloco.org>  Fri, 29 Mar 2013 20:45:36 +0400

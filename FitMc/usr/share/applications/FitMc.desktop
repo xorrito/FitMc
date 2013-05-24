@@ -8,5 +8,12 @@ Type=Application
 StartupNotify=true
 Icon=fitmc
 Comment=Run Technic-Launcher in a thin enviroment
-Exec=/usr/bin/fitmc
+Exec=fitmc
 Categories=GNOME;GTK;Application;Game;
+
+Actions=Nominimal;
+
+[Desktop Action Nominimal]
+Name=Start FitMc Without Changing Window Manager
+Exec=fitmc nocwm
+OnlyShowIn=Unity;

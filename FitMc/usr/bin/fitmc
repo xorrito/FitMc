@@ -18,7 +18,7 @@ function installtl(){
 
 	cd $HOME/.technic/FitMc
 	if [ ! -f "tl-${tlv}.jar" ]; then
-			rm "tl-*.jar"
+			rm *.jar
                 	wget --progress=bar:force --no-cache "http://mirror.technicpack.net/launcher/${tlv}/TechnicLauncher.jar" -O tl-${tlv}.jar 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Technic-Launcher..." 
 			chmod +x tl-${tlv}.jar
 		else
@@ -55,11 +55,12 @@ function lwjgl(){
 		killjava
 	cd $HOME/.technic/FitMc/lwjgl-${lwjglv}/native/linux
 		while read dir; do
-			cp -rvs * "$dir"
+			cp -rvs --remove-destination * "$dir"
 		done < $HOME/.technic/FitMc/nativesf.txt
 	cd $HOME/.technic/FitMc/lwjgl-${lwjglv}/jar
+		cp -rvs --remove-destination * $HOME/.technic/cache
 		while read dir; do
-			cp -rvs * "$dir"
+			cp -rvs --remove-destination * "$dir"
 		done < $HOME/.technic/FitMc/binf.txt
 	cd $HOME/.technic/FitMc/
 		tl
@@ -149,7 +150,7 @@ function texture(){
 			mv ${txtpk} $HOME/.technic/FitMc/txturpk/
 			cd $HOME/.technic/FitMc/txturpk/
 			while read dir; do
-				cp -rvs $HOME/.technic/FitMc/txturpk/* "$dir"
+				cp -rvs --remove-destination $HOME/.technic/FitMc/txturpk/* "$dir"
 			done < $HOME/.technic/FitMc/texturesf.txt
 			cd $HOME/.technic/FitMc/
 
@@ -163,15 +164,16 @@ esac
 
 #Mod Installer
 function mod(){
+	imp
 	modpk=`zenity --file-selection --title="Select Your mod file"`
 	case $? in
 		0)
-			imp
-			if [ ! -d "modfolder" ]
+			if [ ! -d "mod-folder-back" ]
 				then
-				mkdir "modfolder"
+				mkdir "mod-folder-back"
 			fi
 			unset mdpklist
+			cp ${modpk} $HOME/.technic/FitMc/mod-folder-back
 			while read -r line; do
 				mdpklist+=("FALSE")
 				mdpklist+=("$line")
@@ -293,7 +295,11 @@ opt9="Versions"
 killjava
 installtl
 tl
-cwm
+if [[ $@ == *nocwm* ]]; then
+	notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Starting without Thin Window Manager"
+	else
+	cwm
+fi
 
 
 notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Starting Option menu and technic launcher"

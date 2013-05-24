@@ -54,15 +54,16 @@ NEWS
   * Mod installation asks for selection to avoid conflicting with other modpacks
   * Fixed Texture Installer....again but with if loop this time
   * Log cleanup moved to start up to allow troubleshooting
-* *Version 2* <br/>
+* *Version 2.1* <br/>
   * Should have checked before uploading.
+* *Version 2.2* <br/>
+  * Unity integration.
+  * Option to not change Window Manager.
 
 Future
 -----
   * All images are place holders and will be changed to nicer ones
   * will change GUI method to buttons instead of radio list
-  * Unity integration
-  * Option to load without Window Manager change
   * Clock display
   * Method for uninstalling single or all textures
 
