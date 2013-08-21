@@ -1,6 +1,6 @@
-fitmc (2.2) raring; urgency=low
+fitmc (2.3) raring; urgency=low
 
-  * Unity integration.
-  * Option to not change Window Manager.
+  * Option to remove textures and mods.
+  * Technic Log cleaner at start.
 
  -- Xorrito Del Bosque (wag on) <xorrito@azloco.org>  Fri, 29 Mar 2013 20:45:36 +0400

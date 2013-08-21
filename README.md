@@ -59,13 +59,15 @@ NEWS
 * *Version 2.2* <br/>
   * Unity integration.
   * Option to not change Window Manager.
+* *Version 2.3* <br/>
+  * Option to remove textures and mods.
+  * Technic Log cleaner at start.
 
 Future
 -----
   * All images are place holders and will be changed to nicer ones
-  * will change GUI method to buttons instead of radio list
+  * will change GUI method to buttons instead of radio list (Probably not Happening)
   * Clock display
-  * Method for uninstalling single or all textures
 
 Features
 -----

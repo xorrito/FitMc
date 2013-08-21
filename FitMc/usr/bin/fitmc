@@ -1,11 +1,18 @@
 #!/bin/bash
 ####========================Version==Controll======================####
-fitmc=2
-tlv=240
+tlv=253
 lwjglv=2.9.0
+fitmcv=2.3
 ####============================Fuctions===========================####
 #Check if Technic-Launcher is in the correct spot, if not then download
+function logrm(){
+	echo "Log Cleaner"
+	cd $HOME/.technic/logs
+	rm -v *
+	cd $HOME/.technic
+}
 function installtl(){
+	echo "Technic Installer"
 	if [ ! -d "$HOME/.technic" ]
 		then
 			mkdir "$HOME/.technic"
@@ -23,12 +30,12 @@ function installtl(){
 			chmod +x tl-${tlv}.jar
 		else
 			imp
-			rm -rv *.log
 	fi
 }
 
 #Download Lwjgl
 function dllwjgl(){
+	echo "Lwjgl Downloader"
 	if [ ! -d "lwjgl-${lwjglv}" ] ; then
 		rm -rv "lwjgl-${lwjglv}"
 		wget --progress=bar:force --no-cache "http://sourceforge.net/projects/java-game-lib/files/latest/download?source=files" -O lwjgl-${lwjglv}.zip 2>&1 | zenity --progress --auto-close --auto-kill --title="Fetching Lwjgl ${lwjglv}"
@@ -50,6 +57,7 @@ function dllwjgl(){
 
 #Install lwjgl
 function lwjgl(){
+	echo "Lwjgl Installer"
 	imp
 	cd lwjgl-${lwjglv}/
 		killjava
@@ -70,6 +78,7 @@ function lwjgl(){
 # Start basic window manager and video settings
 # Thank you Steam-login for this part
 function swm(){
+	echo "Window Manager Changer"
 	notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Starting thin Window Manager' &
 	xfwm4 --replace --daemon --compositor=off
 	which nvidia-settings && nvidia-settings -l
@@ -78,6 +87,7 @@ function swm(){
 
 # Check if Window Manager is running
 function cwm(){
+	echo "Window Manager Checker"
 	if [ "$(pidof xfwm4)" ]
 	then
 		killall nautilus
@@ -108,12 +118,14 @@ fi
 
 # Change back to Compiz
 function swmb(){
+	echo "Change Back To Compiz"
 	notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Quiting' &
 	compiz --replace &
 }
 
 # Check if Compiz restored
 function cwmb(){
+	echo "Check Compiz"
 	if [ "$(pidof compiz)" ]
 	then
 		notify-send -i /usr/share/pixmaps/FitMc-logo.png 'FitMc:' 'Goodbye'
@@ -126,26 +138,29 @@ fi
 
 #Establishing technic as a function
 function tl(){
+	echo "Launching Technic"
         java -jar $HOME/.technic/FitMc/tl-${tlv}.jar
         }
 
 #Set java kill command as function
 function killjava(){
+	echo "Kill Java"
         #nice kill
-        killall java
+        killall -q java
         #force kill
-        killall -9 java
+        killall -q -9 java
 	}
 
 #Texture Pack Installer
 function texture(){
+	echo "Texture Installer"
 	txtpk=`zenity --file-selection --title="Select a TexturePack"`
 	case $? in
 		0)
 			imp
-			if [ ! -d "txturpk" ]
+			if [ ! -d "$HOME/.technic/FitMc/txturpk" ]
 				then
-				mkdir "txturpk"
+				mkdir "$HOME/.technic/FitMc/txturpk"
 			fi
 			mv ${txtpk} $HOME/.technic/FitMc/txturpk/
 			cd $HOME/.technic/FitMc/txturpk/
@@ -161,24 +176,58 @@ function texture(){
 			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "An unexpected error has occurred" ;;
 esac
 }
+#Texture Remover
+function trm(){
+	echo "Texture Remover"
+	unset trm2 trm3 trm4 trm6
+	ls $HOME/.technic/FitMc/txturpk > $HOME/.technic/FitMc/trm1.txt
+	while read -r trm2; do
+		trm3+=("FALSE")
+		trm3+=("$trm2")
+	done < $HOME/.technic/FitMc/trm1.txt
+	trm4=$(zenity --title="Texture Uninstaller" --list --radiolist --text "Select Texture To remove" --column '' --column "Texture" "${trm3[@]}" --separator=":")
+	find $HOME/.technic/ -name "$trm4" -type l > $HOME/.technic/FitMc/trm5.txt
+	while read -r trm6; do
+		rm -v ${trm6}
+	done < $HOME/.technic/FitMc/trm5.txt
+	cd $HOME/.technic/FitMc/
+	txtpk2=`zenity --question --title= "Texture Pack Uninstaller" --text="Would you like to Have a coppy of the file in your desktop?"`
+	case $? in
+		0)
+			if [ ! -d "$HOME/Desktop/FitMc-texture" ]
+			then
+				mkdir "$HOME/Desktop/FitMc-texture"
+			fi
+			mv -v txturpk/$trm4 $HOME/Desktop/FitMc-texture
+			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Texture pack Uninstalled and Backed up" ;;
+		1)
+			rm -v txturpk/$trm4
+			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Texture pack Uninstalled" ;;
+		-1)
+			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "An unexpected error has occurred" ;;
+	esac
+	rm -v "trm1.txt" -f
+	rm -v "trm5.txt" -f
+}
 
 #Mod Installer
 function mod(){
+	echo "Mod Installer"
 	imp
 	modpk=`zenity --file-selection --title="Select Your mod file"`
 	case $? in
 		0)
-			if [ ! -d "mod-folder-back" ]
+			if [ ! -d "$HOME/.technic/FitMc/mod-folder-back" ]
 				then
-				mkdir "mod-folder-back"
+				mkdir "$HOME/.technic/FitMc/mod-folder-back"
 			fi
-			unset mdpklist
+			unset mdpklist modsf
 			cp ${modpk} $HOME/.technic/FitMc/mod-folder-back
-			while read -r line; do
+			while read -r modsf; do
+				mdpklist+=("$modsf")
 				mdpklist+=("FALSE")
-				mdpklist+=("$line")
 			done < $HOME/.technic/FitMc/modsf.txt
-			modsel=$(zenity --title="ModPack Select" --list --radiolist --text "Select The Modpack to install the mod to" --column '' --column "Option" "${mdpklist[@]}" --separator=":")
+			modsel=$(zenity --title= "ModPack Select" --list --radiolist --text "Select The Modpack to install the mod to" --column '' --column "Option" "${mdpklist[@]}" --separator=":")
 			mv -v ${modpk} ${modsel}
 			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Mod installed" ;;
 		1)
@@ -188,8 +237,44 @@ function mod(){
 esac
 }
 
+#Mod Remover
+function mrm(){
+	echo "Mod Remover"
+	unset trm2 trm3 trm4 trm6
+	ls $HOME/.technic/FitMc/mod-folder-back > $HOME/.technic/FitMc/mrm1.txt
+	while read -r mrm2; do
+		mrm3+=("FALSE")
+		mrm3+=("$mrm2")
+	done < $HOME/.technic/FitMc/mrm1.txt
+	mrm4=$(zenity --title="Mod Uninstaller" --list --radiolist --text "Select Mod To remove" --column '' --column "Mod" "${mrm3[@]}" --separator=":")
+	find $HOME/.technic/ -name $mrm4 -type l > $HOME/.technic/FitMc/mrm5.txt
+	while read -r mrm6; do
+		rm -v ${mrm6}
+	done < $HOME/.technic/FitMc/mrm5.txt
+	cd $HOME/.technic/FitMc/
+	modpk2=`zenity --question --title"Mod Uninstaller" --text="Would you like to Have a coppy of the file in your desktop?"`
+	case $? in
+		0)
+			if [ ! -d "$HOME/Desktop/FitMc-mod" ]
+			then
+				mkdir "$HOME/Desktop/FitMc-mod"
+			fi
+			mv -v mod-folder-back/$mrm4 $HOME/Desktop/FitMc-mod
+			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Mod Uninstalled and Backed up" ;;
+		1)
+			rm -v mod-folder-back/$mrm4
+			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Mod Uninstalled" ;;
+		-1)
+			notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "An unexpected error has occurred" ;;
+	esac
+	rm -v "mrm1.txt" -f
+	rm -v "mrm5.txt" -f
+}
+
 
 function imp(){
+	echo "Installed Mod Packs checker"
+	cd $HOME/.technic/FitMc/
 	rm -v binf.txt nativesf.txt texturesf.txt modsf.txt
 	find $HOME/.technic/ -name 'bin' -type d > binf.txt
 	find $HOME/.technic/ -name 'natives' -type d > nativesf.txt
@@ -201,39 +286,38 @@ function imp(){
 ####===========================Gui=================================####
 #Menus
 menu () {
-	int=`zenity --title="FitMc" --window-icon="/usr/share/pixmaps/FitMc-logo.png" --height=326 --width=250 --list --radiolist --text 'FitMc Options:' --column '' --column 'Option' FALSE "$opt1" FALSE "$opt2" FALSE "$opt3" FALSE "$opt4" FALSE "$opt5" FALSE "$opt6" FALSE "$opt7" FALSE "$opt8" FALSE "$opt9"`
+	echo "Menu"
+	int=`zenity --title="FitMc ${fitmcv}" --window-icon="/usr/share/pixmaps/FitMc-logo.png" --height=326 --width=250 --list --radiolist --text 'FitMc Options:' --column '' --column 'Option' FALSE "$opt1" FALSE "$opt2" FALSE "$opt3" FALSE "$opt4" FALSE "$opt5" FALSE "$opt6" FALSE "$opt7" FALSE "$opt8" FALSE "$opt9"`
 
-if [ "$int" == "Quit FitMc" ]
-        then
-                killjava
-		cwmb
-		cd $HOME/
-        exit
-fi
-if [ "$int" == "Power System off" ]
-        then
-                /usr/lib/indicator-session/gtk-logout-helper --shutdown 
-        menu
-fi
-if [ "$int" == "Install a TexturePack" ]
+if [ "$int" == "$opt1" ]
 	then
-		texture
+		int2=`zenity --title="Texture Option" --list --radiolist --text 'Chose What to do' --column '' --column 'Option' FALSE "Install" FALSE "Uninstall"`
+		if [ "$int2" == "Install" ]; then
+			texture
+		fi
+		if [ "$int2" == "Uninstall" ]; then
+			trm
+		fi
 		menu
 fi
-if [ "$int" == "Install a Mod" ]
+if [ "$int" == "$opt2" ]
 	then
-		mod
+		int2=`zenity --title="Mod Option" --list --radiolist --text 'Chose What to do' --column '' --column 'Option' FALSE "Install" FALSE "Uninstall"`
+		if [ "$int2" == "Install" ]; then
+			mod
+		fi
+		if [ "$int2" == "Uninstall" ]; then
+			mrm
+		fi
 		menu
 fi
-if [ "$int" == "Force Launcher Redownload" ]
+if [ "$int" == "$opt3" ]
 	then
-		killjava
-		rm tl-${tlv}.jar
-		installtl
-		tl
-		tbmenu
+		notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Attempting to Fix Key problem" &
+		dllwjgl
+	menu
 fi
-if [ "$int" == "Restart Launcher" ]
+if [ "$int" == "$opt4" ]
         then
                 notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Restarting Technic Launcher" &
                 killjava
@@ -241,7 +325,15 @@ if [ "$int" == "Restart Launcher" ]
                 tl
         menu
 fi
-if [ "$int" == "Force Modpack Redownload" ]
+if [ "$int" == "$opt5" ]
+	then
+		killjava
+		rm tl-${tlv}.jar
+		installtl
+		tl
+		tbmenu
+fi
+if [ "$int" == "$opt6" ]
 	then
 		notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Forcing Modpack to Redownload on next launch" &
 		killjava
@@ -266,22 +358,28 @@ if [ "$int" == "Force Modpack Redownload" ]
 		tl
 	menu
 fi
-if [ "$int" == "Fix Sticky Keys" ]
-	then
-		notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Attempting to Fix Key problem" &
-		dllwjgl
-	menu
+if [ "$int" == "$opt7" ]
+        then
+                killjava
+		cwmb
+		cd $HOME/
+        exit
+fi
+if [ "$int" == "$opt8" ]
+        then
+                /usr/lib/indicator-session/gtk-logout-helper --shutdown 
+        menu
 fi
 if [ "$int" == "$opt9" ]
 	then
-		version=`zenity --window-icon="/usr/share/pixmaps/FitMc-logo.png" --info --title "Versions" --text="\`printf "FitMc: ${fitmc} \n Technic Launcher: ${tlv} \n LWJGL: ${lwjglv}"\`"`
+		version=`zenity --window-icon="/usr/share/pixmaps/FitMc-logo.png" --info --title "Versions" --text="\`printf "Technic Launcher: ${tlv} \n LWJGL: ${lwjglv}"\`"`
 		menu
 fi
 }
 
 #Main menu options
-opt1="Install a TexturePack"
-opt2="Install a Mod"
+opt1="TexturePack Options"
+opt2="Mod Options"
 opt3="Fix Sticky Keys"
 opt4="Restart Launcher"
 opt5="Force Launcher Redownload"
@@ -292,14 +390,16 @@ opt9="Versions"
 
 ####==========================Script===============================####
 
+cd $HOME/.technic/FitMc/
 killjava
 installtl
-tl
+logrm
 if [[ $@ == *nocwm* ]]; then
 	notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Starting without Thin Window Manager"
 	else
 	cwm
 fi
+tl
 
 
 notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Starting Option menu and technic launcher"
