@@ -62,6 +62,14 @@ NEWS
 * *Version 2.3* <br/>
   * Option to remove textures and mods.
   * Technic Log cleaner at start.
+* *Version 2.4* <br/>
+  * Fixed Texture and mod installer/remover.
+
+Known Bugs
+-----
+  * Fix stiky keys seems broken with new modpacks. Not sure if its my fault or something else.
+  * Log in logo dosen't seems to show up.
+
 
 Future
 -----
