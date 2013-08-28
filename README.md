@@ -64,6 +64,8 @@ NEWS
   * Technic Log cleaner at start.
 * *Version 2.4* <br/>
   * Fixed Texture and mod installer/remover.
+* *Verison 2.4-1* <br />
+  * Fixed FitMc menu not starting until technic fully closed.
 
 Known Bugs
 -----

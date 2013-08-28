@@ -2,7 +2,7 @@
 ####========================Version==Controll======================####
 tlv=253
 lwjglv=2.9.0
-fitmcv=2.4
+fitmcv=2.4-1
 ####============================Fuctions===========================####
 #Check if Technic-Launcher is in the correct spot, if not then download
 function logrm(){
@@ -399,7 +399,7 @@ if [[ $@ == *nocwm* ]]; then
 	else
 	cwm
 fi
-tl
+tl & menu
 
 
 notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Starting Option menu and technic launcher"
