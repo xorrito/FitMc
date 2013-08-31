@@ -2,7 +2,7 @@
 ####========================Version==Controll======================####
 tlv=253
 lwjglv=2.9.0
-fitmcv=2.4-1
+fitmcv=2.5
 ####============================Fuctions===========================####
 #Check if Technic-Launcher is in the correct spot, if not then download
 function logrm(){
@@ -287,9 +287,9 @@ function imp(){
 #Menus
 menu () {
 	echo "Menu"
-	int=`zenity --title="FitMc ${fitmcv}" --window-icon="/usr/share/pixmaps/FitMc-logo.png" --height=326 --width=250 --list --radiolist --text 'FitMc Options:' --column '' --column 'Option' FALSE "$opt1" FALSE "$opt2" FALSE "$opt3" FALSE "$opt4" FALSE "$opt5" FALSE "$opt6" FALSE "$opt7" FALSE "$opt8" FALSE "$opt9"`
+	int=`zenity --title="FitMc ${fitmcv}" --window-icon="/usr/share/pixmaps/FitMc-logo.png" --height=326 --width=250 --list --radiolist --text 'FitMc Options:' --column '' --column 'Option' FALSE "$opt1" FALSE "$opt2" FALSE "$opt3" FALSE "$opt4" FALSE "$opt5" FALSE "$opt6" FALSE "$opt7" FALSE "$opt8" FALSE "$opt9" FALSE "$opt10"`
 
-if [ "$int" == "$opt1" ]
+if [ "$int" == "$opt2" ]
 	then
 		int2=`zenity --title="Texture Option" --list --radiolist --text 'Chose What to do' --column '' --column 'Option' FALSE "Install" FALSE "Uninstall"`
 		if [ "$int2" == "Install" ]; then
@@ -300,7 +300,7 @@ if [ "$int" == "$opt1" ]
 		fi
 		menu
 fi
-if [ "$int" == "$opt2" ]
+if [ "$int" == "$opt3" ]
 	then
 		int2=`zenity --title="Mod Option" --list --radiolist --text 'Chose What to do' --column '' --column 'Option' FALSE "Install" FALSE "Uninstall"`
 		if [ "$int2" == "Install" ]; then
@@ -311,13 +311,13 @@ if [ "$int" == "$opt2" ]
 		fi
 		menu
 fi
-if [ "$int" == "$opt3" ]
+if [ "$int" == "$opt4" ]
 	then
 		notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Attempting to Fix Key problem" &
 		dllwjgl
 	menu
 fi
-if [ "$int" == "$opt4" ]
+if [ "$int" == "$opt5" ]
         then
                 notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Restarting Technic Launcher" &
                 killjava
@@ -325,7 +325,7 @@ if [ "$int" == "$opt4" ]
                 tl
         menu
 fi
-if [ "$int" == "$opt5" ]
+if [ "$int" == "$opt6" ]
 	then
 		killjava
 		rm tl-${tlv}.jar
@@ -333,7 +333,7 @@ if [ "$int" == "$opt5" ]
 		tl
 		tbmenu
 fi
-if [ "$int" == "$opt6" ]
+if [ "$int" == "$opt7" ]
 	then
 		notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Forcing Modpack to Redownload on next launch" &
 		killjava
@@ -358,35 +358,41 @@ if [ "$int" == "$opt6" ]
 		tl
 	menu
 fi
-if [ "$int" == "$opt7" ]
+if [ "$int" == "$opt8" ]
         then
                 killjava
+		wmctrl -c "clock"
 		cwmb
 		cd $HOME/
         exit
 fi
-if [ "$int" == "$opt8" ]
+if [ "$int" == "$opt9" ]
         then
                 /usr/lib/indicator-session/gtk-logout-helper --shutdown 
         menu
 fi
-if [ "$int" == "$opt9" ]
+if [ "$int" == "$opt10" ]
 	then
 		version=`zenity --window-icon="/usr/share/pixmaps/FitMc-logo.png" --info --title "Versions" --text="\`printf "Technic Launcher: ${tlv} \n LWJGL: ${lwjglv}"\`"`
 		menu
 fi
+if [ "$int" == "$opt1" ]
+	then
+		xterm -fa "Ubuntu" -fs "32" -geometry 11x1  -title "clock" -e "setterm -cursor off & watch -t -n 1 date +%X" & menu
+fi
 }
 
 #Main menu options
-opt1="TexturePack Options"
-opt2="Mod Options"
-opt3="Fix Sticky Keys"
-opt4="Restart Launcher"
-opt5="Force Launcher Redownload"
-opt6="Force Modpack Redownload"
-opt7="Quit FitMc"
-opt8="Power System off"
-opt9="Versions"
+opt1="Clock"
+opt2="TexturePack Options"
+opt3="Mod Options"
+opt4="Fix Sticky Keys"
+opt5="Restart Launcher"
+opt6="Force Launcher Redownload"
+opt7="Force Modpack Redownload"
+opt8="Quit FitMc"
+opt9="Power System off"
+opt10="Versions"
 
 ####==========================Script===============================####
 
@@ -407,9 +413,10 @@ notify-send -i /usr/share/pixmaps/FitMc-logo.png "FitMc:" "Starting Option menu 
 menu
 menu
 menu
-zenity --warning --text "Menu will only open one last time
-please exit properly"
+zenity --warning --text "FitMc will only open one last time
+then it will exit"
 menu
 killjava
+wmctrl -c "clock"
 cwmb
 cd $HOME/ 
