@@ -22,6 +22,9 @@ FitMc uses Technic-Launcher as a minecraft client. Vanilla is available in Techn
 NEWS
 ----
 
+* *Version 2.5-18 <br/>
+  * Changed Desktop Icon.
+
 * *Version 2.5* <br />
   * Added Clock.
 

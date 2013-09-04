@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=FitMc
+Version=2.5-1
 Comment=This session logs you directly to FitMc
 Exec=fitmc
 Icon=fitmc

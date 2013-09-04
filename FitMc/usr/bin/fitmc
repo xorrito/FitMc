@@ -2,7 +2,7 @@
 ####========================Version==Controll======================####
 tlv=253
 lwjglv=2.9.0
-fitmcv=2.5
+fitmcv=2.5-1
 ####============================Fuctions===========================####
 #Check if Technic-Launcher is in the correct spot, if not then download
 function logrm(){
